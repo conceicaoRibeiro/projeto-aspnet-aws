@@ -1,12 +1,4 @@
-name: Build .NET Project
-
-on:
-  push:
-    branches:
-      - main
-      - master
-
-  pull_request:name: Build and Deploy .NET Project to AWS Elastic Beanstalk
+name: Build and Deploy .NET Project to AWS Elastic Beanstalk
 
 on:
   push:
@@ -111,31 +103,3 @@ jobs:
       - name: Aguardar finalização do deploy
         run: |
           aws elasticbeanstalk wait environment-updated             --environment-name "${{ env.EB_ENVIRONMENT_NAME }}"
-
-    branches:
-      - main
-      - master
-
-jobs:
-  build:
-    name: Build ProjetoAWS
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Restaurar dependências
-        run: dotnet restore ProjetoAWS.slnx
-
-      - name: Compilar projeto
-        run: dotnet build ProjetoAWS.slnx --configuration Release --no-restore
-
-      - name: Executar testes
-        run: dotnet test ProjetoAWS.slnx --configuration Release --no-build --verbosity normal
-        continue-on-error: true
